@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starters, stoppers en overlevingskans voor bouwbedrijven per provincie</title>
+    <link rel="stylesheet" href="css/layout-template.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__container">
+            <div class="header__logo">
+                <img src="assets/logo.png" alt="Logo" class="header__logo-img">
+                <h1 class="header__name">Starters, stoppers en overlevingskans voor bouwbedrijven per provincie</h1>
+            </div>
+            <nav class="header__navigation">
+                <a href="#survival-1year">Overlevingskans 1j</a>
+                <a href="#survival-3year">Overlevingskans 3j</a>
+                <a href="#starters">Starters</a>
+                <a href="#bankruptcies">Faillissementen (juridisch)</a>
+                <a href="#trend-index">Trend Index</a>
+                <a href="#trend-absolute">Trend Absoluut</a>
+                <a href="#starters-index">Starters Index</a>
+                <a href="#yearly">Jaarlijks Overzicht</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Controls Section -->
+            <section class="controls-section">
+                <div class="control-group">
+                    <h3>Selecteer Regio's:</h3>
+                    <div class="region-buttons">
+                        <button class="btn btn-region" data-action="vlaanderen">Vlaanderen</button>
+                        <button class="btn btn-region" data-action="wallonie">Wallonië</button>
+                        <button class="btn btn-region" data-action="brussels">Brussels</button>
+                        <button class="btn btn-region btn-outline" data-action="all">Alles</button>
+                        <button class="btn btn-region btn-outline" data-action="none">Niets</button>
+                    </div>
+                    
+                    <h4>Vlaamse Provincies:</h4>
+                    <div class="province-buttons">
+                        <button class="btn btn-province" data-province="Antwerpen">Antwerpen</button>
+                        <button class="btn btn-province" data-province="Vlaams-Brabant">Vlaams-Brabant</button>
+                        <button class="btn btn-province" data-province="West-Vlaanderen">West-Vlaanderen</button>
+                        <button class="btn btn-province" data-province="Oost-Vlaanderen">Oost-Vlaanderen</button>
+                        <button class="btn btn-province" data-province="Limburg">Limburg</button>
+                    </div>
+                    
+                    <h4>Waalse Provincies + Brussels:</h4>
+                    <div class="province-buttons">
+                        <button class="btn btn-province" data-province="Waals-Brabant">Waals-Brabant</button>
+                        <button class="btn btn-province" data-province="Henegouwen">Henegouwen</button>
+                        <button class="btn btn-province" data-province="Luik">Luik</button>
+                        <button class="btn btn-province" data-province="Luxemburg">Luxemburg</button>
+                        <button class="btn btn-province" data-province="Namen">Namen</button>
+                        <button class="btn btn-province" data-province="Brussels">Brussels</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Sections -->
+            <section class="dashboard-section" id="survival-1year">
+                <h2>1. Overlevingskans na 1 jaar</h2>
+                <p class="chart-note"><em>Bron: Statbel, <a href="https://statbel.fgov.be/nl/open-data/overleven-van-de-btw-plichtige-ondernemingen" target="_blank" rel="noopener">Overleven van de btw-plichtige ondernemingen</a>, verwerking Embuild Vlaanderen. Meet alle stopzettingen (faillissementen + vrijwillige stopzettingen + fusies)</em></p>
+                <div class="chart-container">
+                    <canvas id="survival-1year-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="survival-1year-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="survival-1year-table-container">
+                    <table id="survival-1year-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar</th>
+                                <th>Bouwsector (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="survival-3year">
+                <h2>2. Overlevingskans na 3 jaar</h2>
+                <p class="chart-note"><em>Bron: Statbel, <a href="https://statbel.fgov.be/nl/open-data/overleven-van-de-btw-plichtige-ondernemingen" target="_blank" rel="noopener">Overleven van de btw-plichtige ondernemingen</a>, verwerking Embuild Vlaanderen. Meet alle stopzettingen (faillissementen + vrijwillige stopzettingen + fusies)</em></p>
+                <div class="chart-container">
+                    <canvas id="survival-3year-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="survival-3year-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="survival-3year-table-container">
+                    <table id="survival-3year-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar</th>
+                                <th>Bouwsector (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="starters">
+                <h2>3. Nieuwe starters bouwsector</h2>
+                <p class="chart-note"><em>Bron: Statbel, <a href="https://statbel.fgov.be/nl/open-data/overleven-van-de-btw-plichtige-ondernemingen" target="_blank" rel="noopener">Overleven van de btw-plichtige ondernemingen</a>, verwerking Embuild Vlaanderen</em></p>
+                <div class="chart-container">
+                    <canvas id="starters-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="starters-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="starters-table-container">
+                    <table id="starters-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar</th>
+                                <th>Aantal nieuwe starters</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="bankruptcies">
+                <h2>4. Faillissementen bouwsector (juridische bankruptcies)</h2>
+                <p class="chart-note"><em>Bron: Statbel, <a href="https://statbel.fgov.be/nl/open-data/maandevolutie-van-de-faillissementen-volgens-nace" target="_blank" rel="noopener">Maandevolutie van de faillissementen volgens NACE</a>, verwerking Embuild Vlaanderen. Enkel formele faillissementen door rechtbank. Dit is een subset van alle stopzettingen.</em></p>
+                <div class="chart-container">
+                    <canvas id="bankruptcies-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="bankruptcies-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="bankruptcies-table-container">
+                    <table id="bankruptcies-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar</th>
+                                <th>Aantal faillissementen</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="trend-index">
+                <h2>5. 12-maandelijkse trend faillissementen (index 2008 = 100)</h2>
+                <p class="chart-note"><em>Bron: Statbel, <a href="https://statbel.fgov.be/nl/open-data/maandevolutie-van-de-faillissementen-volgens-nace" target="_blank" rel="noopener">Maandevolutie van de faillissementen volgens NACE</a>, verwerking Embuild Vlaanderen</em></p>
+                <div class="chart-container">
+                    <canvas id="trend-index-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="trend-index-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="trend-index-table-container">
+                    <table id="trend-index-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar-Maand</th>
+                                <th>Bouwsector (index)</th>
+                                <th>Niet-bouwsector (index)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="trend-absolute">
+                <h2>6. 12-maandelijkse trend faillissementen bouwsector (absolute cijfers)</h2>
+                <p class="chart-note"><em>Bron: Statbel, <a href="https://statbel.fgov.be/nl/open-data/maandevolutie-van-de-faillissementen-volgens-nace" target="_blank" rel="noopener">Maandevolutie van de faillissementen volgens NACE</a>, verwerking Embuild Vlaanderen</em></p>
+                <div class="chart-container">
+                    <canvas id="trend-absolute-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="trend-absolute-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="trend-absolute-table-container">
+                    <table id="trend-absolute-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar-Maand</th>
+                                <th>Aantal faillissementen (12-maands som)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="starters-index">
+                <h2>7. Nieuwe starters (index 2008 = 100)</h2>
+                <p class="chart-note"><em>Bron: Statbel, <a href="https://statbel.fgov.be/nl/open-data/overleven-van-de-btw-plichtige-ondernemingen" target="_blank" rel="noopener">Overleven van de btw-plichtige ondernemingen</a>, verwerking Embuild Vlaanderen</em></p>
+                <div class="chart-container">
+                    <canvas id="starters-index-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="starters-index-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="starters-index-table-container">
+                    <table id="starters-index-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar</th>
+                                <th>Bouwsector (index)</th>
+                                <th>Niet-bouwsector (index)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="yearly">
+                <h2>8. Jaarlijkse cijfers bouwsector (sinds 2016)</h2>
+                <p class="chart-note"><em>Bronnen: Statbel, <a href="https://statbel.fgov.be/nl/open-data/overleven-van-de-btw-plichtige-ondernemingen" target="_blank" rel="noopener">Overleven van de btw-plichtige ondernemingen</a> (overlevingskansen en starters) + <a href="https://statbel.fgov.be/nl/open-data/maandevolutie-van-de-faillissementen-volgens-nace" target="_blank" rel="noopener">Maandevolutie van de faillissementen volgens NACE</a> (juridische faillissementen), verwerking Embuild Vlaanderen</em></p>
+                <div class="chart-container">
+                    <canvas id="yearly-summary-chart"></canvas>
+                </div>
+                <button class="btn btn-toggle-table" data-table="yearly-summary-table">Toon/Verberg Tabel</button>
+                <div class="table-container hidden" id="yearly-summary-table-container">
+                    <table id="yearly-summary-table">
+                        <thead>
+                            <tr>
+                                <th>Provincie</th>
+                                <th>Jaar</th>
+                                <th>1-jarige overlevingskans (%)</th>
+                                <th>3-jarige overlevingskans (%)</th>
+                                <th>Nieuwe starters</th>
+                                <th>Jaarlijkse faillissementen</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/dashboard-data-loader.js"></script>
+    <script src="js/dashboard-charts.js"></script>
+    <script src="js/dashboard-main.js"></script>
+</body>
+</html>
