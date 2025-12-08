@@ -1,0 +1,318 @@
+/* Dashboard Custom Styles */
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.main {
+    padding-top: var(--spacing-md);
+}
+
+/* Controls Section */
+.controls-section {
+    background: var(--bg-gray);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow);
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.control-group h3 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.control-group h4 {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.control-group label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+/* Region and Province Buttons */
+.region-buttons,
+.province-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.btn-region {
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    min-width: 150px;
+    background: white;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+    transition: all 0.3s ease;
+}
+
+.btn-region:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-region.active {
+    background: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.btn-province {
+    background: white;
+    color: var(--text-dark);
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.btn-province:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-gray);
+}
+
+.btn-province.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-outline {
+    background: white;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+}
+
+.btn-outline:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.control-buttons {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #0f2f5f;
+}
+
+.btn-toggle-table {
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    background: var(--accent-color);
+    color: white;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+}
+
+.btn-toggle-table:hover {
+    background: var(--primary-hover);
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+    background: white;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.dashboard-section h2 {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--accent-color);
+    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+}
+
+.chart-note {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-left: 3px solid var(--accent-color);
+    border-radius: 4px;
+}
+
+.chart-note a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.chart-note a:hover {
+    color: var(--primary-hover);
+    border-bottom-color: var(--primary-hover);
+}
+
+/* Chart Container */
+.chart-container {
+    position: relative;
+    height: 400px;
+    margin-bottom: var(--spacing-md);
+}
+
+.chart-container canvas {
+    max-height: 100%;
+}
+
+/* Table Container */
+.table-container {
+    overflow-x: auto;
+    margin-top: var(--spacing-sm);
+}
+
+.table-container.hidden {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+thead {
+    background: var(--primary-color);
+    color: white;
+}
+
+thead th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+tbody tr:hover {
+    background: var(--bg-gray);
+}
+
+tbody td {
+    padding: 10px 12px;
+}
+
+tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+tbody tr:nth-child(even):hover {
+    background: var(--bg-gray);
+}
+
+/* Province Colors */
+.province-antwerpen { color: #e74c3c; }
+.province-vlaams-brabant { color: #3498db; }
+.province-west-vlaanderen { color: #10cfc9; } /* Cyaan */
+.province-oost-vlaanderen { color: #f39c12; }
+.province-limburg { color: #9b59b6; }
+.province-waals-brabant { color: #1abc9c; }
+.province-henegouwen { color: #e67e22; }
+.province-luik { color: #34495e; }
+.province-luxemburg { color: #0db3ad; } /* Cyaan donker */
+.province-namen { color: #d35400; }
+.province-brussels { color: #c0392b; }
+
+/* Logo */
+.header__logo-img {
+    height: 50px;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-sm);
+    }
+    
+    .header__container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .header__navigation {
+        width: 100%;
+        margin-top: var(--spacing-xs);
+    }
+    
+    .header__navigation a {
+        font-size: 0.8rem;
+        padding: 6px 8px;
+    }
+
+    .control-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+
+    thead th, tbody td {
+        padding: 8px;
+    }
+}
