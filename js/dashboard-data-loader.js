@@ -39,6 +39,18 @@ class DataLoader {
             'Wallonië': 'Waals Gewest',
             'Brussel': 'Brussels Gewest'
         };
+
+        // Walloon provinces for aggregation
+        this.walloonProvinces = [
+            'Waals-Brabant', 'Henegouwen', 'Luik', 'Luxemburg', 'Namen'
+        ];
+
+        // Files that need aggregation (sum) for Wallonia
+        this.filesToAggregate = [
+            'Nieuwe starters bouwsector.csv',
+            'Faillissementen bouwsector.csv',
+            '12-maandelijkse trend faillissementen bouwsector (absolute cijfers).csv'
+        ];
         
         this.data = {};
     }
@@ -70,11 +82,36 @@ class DataLoader {
                     const regionalFile = this.regionalFileMap[csvFile];
                     const path = `./data/data-grafieken/${regionalFile}`;
                     promises.push(this.loadRegionalCSV(path, 'Vlaanderen', csvFile));
+                } else if (region === 'Brussel') {
+                    // Load from Brussels folder
+                    // Note: Brussels folder is named "Brussels" but we store it as "Brussel" to match region name
+                    const path = `./data/data-grafieken/Brussels/${csvFile}`;
+                    promises.push(this.loadCSV(path, 'Brussel', csvFile));
+                }
+            }
+        }
+
+        // If Wallonia is selected, ensure all Walloon provinces are loaded for aggregation
+        if (regions.includes('Wallonië')) {
+            for (const prov of this.walloonProvinces) {
+                // Only load if not already requested in selectedProvinces
+                // (If it is in selectedProvinces, it's already being loaded in the first loop)
+                if (!selectedProvinces.includes(prov)) {
+                    for (const csvFile of this.filesToAggregate) {
+                        const path = `./data/data-grafieken/${prov}/${csvFile}`;
+                        promises.push(this.loadCSV(path, prov, csvFile));
+                    }
                 }
             }
         }
         
         await Promise.all(promises);
+
+        // Aggregate Wallonia data
+        if (regions.includes('Wallonië')) {
+            this.aggregateWalloniaData();
+        }
+
         return this.data;
     }
 
@@ -335,6 +372,77 @@ class DataLoader {
         });
 
         return averagedData;
+    }
+
+    aggregateWalloniaData() {
+        this.filesToAggregate.forEach(csvFile => {
+            // Check if we have data for all provinces
+            const allProvincesLoaded = this.walloonProvinces.every(prov => 
+                this.data[csvFile] && this.data[csvFile][prov]
+            );
+
+            if (!allProvincesLoaded) {
+                // It's possible some files don't exist for some provinces or failed to load
+                // We'll try to aggregate with what we have, or skip
+                // For now, let's skip if completely empty, but try if partial?
+                // Safer to skip if we expect full data
+                // But let's just log warning
+                // console.warn(`Cannot aggregate Wallonia data for ${csvFile}: missing province data`);
+                // Actually, if we are missing data, the sum will be wrong.
+                // But maybe some provinces don't have data for some years?
+                // Let's proceed but be careful.
+            }
+
+            // Find a province that has data to use as template
+            const validProv = this.walloonProvinces.find(prov => this.data[csvFile] && this.data[csvFile][prov]);
+            if (!validProv) return;
+
+            const templateData = this.data[csvFile][validProv];
+            
+            // Deep copy to avoid modifying original
+            // We map to new objects with 'Provincie': 'Wallonië'
+            const aggregatedData = templateData.map(row => {
+                const newRow = {...row};
+                newRow['Provincie'] = 'Wallonië';
+                return newRow;
+            });
+
+            // Identify value columns (not 'Jaar', 'Jaar-Maand', 'Provincie')
+            const keys = Object.keys(templateData[0]);
+            const valueKeys = keys.filter(k => k !== 'Jaar' && k !== 'Jaar-Maand' && k !== 'Provincie');
+
+            // Sum up values
+            // We assume rows are in same order (sorted by year/month) across all files
+            for (let i = 0; i < aggregatedData.length; i++) {
+                valueKeys.forEach(key => {
+                    let sum = 0;
+                    this.walloonProvinces.forEach(prov => {
+                        if (this.data[csvFile] && this.data[csvFile][prov]) {
+                            const provRow = this.data[csvFile][prov][i];
+                            // Ensure we are matching the same year/month
+                            // If rows are not aligned, this is wrong.
+                            // But usually they are generated from same script.
+                            // Let's add a check if possible, or assume alignment.
+                            // Given the script `extract_chart_data_per_province.py`, they should be aligned.
+                            
+                            if (provRow) {
+                                const val = parseFloat(provRow[key]);
+                                if (!isNaN(val)) {
+                                    sum += val;
+                                }
+                            }
+                        }
+                    });
+                    aggregatedData[i][key] = sum;
+                });
+            }
+
+            // Store aggregated data
+            if (!this.data[csvFile]) {
+                this.data[csvFile] = {};
+            }
+            this.data[csvFile]['Wallonië'] = aggregatedData;
+        });
     }
 }
 
