@@ -39,3 +39,11 @@ logs/
 .env
 .env.local
 .env.*.local
+
+# Downloaded raw data files (large, temporary)
+data/TF_BANKRUPTCIES.txt
+data/TF_VAT_SURVIVALS.txt
+*.zip
+
+# Keep processed CSV data for dashboard
+!data/data-grafieken/

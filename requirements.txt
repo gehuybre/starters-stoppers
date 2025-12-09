@@ -1,0 +1,3 @@
+# Python dependencies voor dashboard data processing
+# Geen externe packages nodig - gebruikt alleen Python standaard library
+# (urllib, zipfile, csv, json, pathlib, collections, os, sys, shutil)

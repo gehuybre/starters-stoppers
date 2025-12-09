@@ -1,0 +1,76 @@
+name: Update Dashboard Data
+
+on:
+  # Run elke maandag om 6:00 UTC (7:00 CET / 8:00 CEST)
+  schedule:
+    - cron: '0 6 * * 1'
+  
+  # Sta handmatige runs toe
+  workflow_dispatch:
+  
+  # Run bij push naar main (voor testen)
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/update-data.yml'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Download and process Statbel data
+      run: |
+        python scripts/update_data.py
+    
+    - name: Check for changes
+      id: check_changes
+      run: |
+        git config --global user.name 'GitHub Actions Bot'
+        git config --global user.email 'actions@github.com'
+        git add data/
+        if git diff --staged --quiet; then
+          echo "changes=false" >> $GITHUB_OUTPUT
+          echo "Geen wijzigingen in data"
+        else
+          echo "changes=true" >> $GITHUB_OUTPUT
+          echo "Data is gewijzigd"
+        fi
+    
+    - name: Commit and push changes
+      if: steps.check_changes.outputs.changes == 'true'
+      run: |
+        git commit -m "🔄 Automatische data update - $(date +'%Y-%m-%d %H:%M')"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Create update summary
+      if: steps.check_changes.outputs.changes == 'true'
+      run: |
+        echo "✅ Dashboard data succesvol bijgewerkt op $(date +'%Y-%m-%d om %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Verwerkte datasets:" >> $GITHUB_STEP_SUMMARY
+        echo "- TF_BANKRUPTCIES (Faillissementen)" >> $GITHUB_STEP_SUMMARY
+        echo "- TF_VAT_SURVIVALS (Overlevingskansen en starters)" >> $GITHUB_STEP_SUMMARY
+    
+    - name: No changes summary
+      if: steps.check_changes.outputs.changes == 'false'
+      run: |
+        echo "ℹ️ Geen nieuwe data beschikbaar - dashboard is up-to-date" >> $GITHUB_STEP_SUMMARY
